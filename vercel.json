@@ -1,0 +1,15 @@
+{
+  "build": [
+    {
+      "src": "dist/vercel.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["dist/**"] }
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "dist/vercel.ts"
+    }
+  ]
+}
