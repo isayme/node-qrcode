@@ -4,8 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/app.ts",
-    "vercel": "vercel dev",
     "build": "tsc"
   },
   "keywords": [],

@@ -1,15 +1,14 @@
 {
-  "build": [
+  "builds": [
     {
-      "src": "dist/vercel.js",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["dist/**"] }
+      "src": "src/api/vercel.ts",
+      "use": "@vercel/node"
     }
   ],
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "dist/vercel.ts"
+      "destination": "/src/api/vercel.ts"
     }
   ]
 }
