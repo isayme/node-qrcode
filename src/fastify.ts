@@ -67,8 +67,6 @@ export async function getQrCodeHandler(
   if (lodash.isEmpty(params.format)) {
     if (isCurl(userAgent)) {
       params.format = 'terminal'
-    } else {
-      params.format = 'png'
     }
   }
 
