@@ -24,6 +24,7 @@ export async function getQrCode(params: GetQrCodeReq): Promise<GetQrCodeResp> {
   margin = toNumber(margin)
   scale = toNumber(scale)
 
+  width = width || 200
   margin = margin || 2
 
   darkColor = formatRGBAColor(darkColor)
