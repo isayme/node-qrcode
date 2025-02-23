@@ -1,14 +1,14 @@
 {
   "builds": [
     {
-      "src": "src/api/vercel.ts",
+      "src": "src/serverless/vercel.ts",
       "use": "@vercel/node"
     }
   ],
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/src/api/vercel.ts"
+      "destination": "/src/serverless/vercel.ts"
     }
   ]
 }

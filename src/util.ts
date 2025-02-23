@@ -21,3 +21,15 @@ export function formatRGBAColor(color: string | undefined): string | undefined {
 
   return `#${color}`
 }
+
+export function toNumber(v: any): number | undefined {
+  if (lodash.isNumber(v)) {
+    return v
+  }
+
+  if (lodash.isUndefined(v) || lodash.isNull(v)) {
+    return undefined
+  }
+
+  return lodash.toNumber(v)
+}

@@ -1,7 +1,6 @@
-import { FastifyReply, FastifyRequest } from 'fastify'
 import lodash from 'lodash'
 import QRCode from 'qrcode'
-import { formatRGBAColor, isCurl } from './util'
+import { formatRGBAColor, toNumber } from './util'
 
 export interface GetQrCodeReq {
   text: string
@@ -13,116 +12,87 @@ export interface GetQrCodeReq {
   lightColor?: string
 }
 
-async function getQrCodeHandler(
-  request: FastifyRequest,
-  reply: FastifyReply,
-  params: GetQrCodeReq,
-) {
-  let { text, width, margin = 2, scale, format, darkColor, lightColor } = params
+export interface GetQrCodeResp {
+  type: string
+  data: any
+}
 
-  const userAgent = request.headers['user-agent'] || ''
+export async function getQrCode(params: GetQrCodeReq): Promise<GetQrCodeResp> {
+  let { text, width, margin, scale, format, darkColor, lightColor } = params
 
-  if (lodash.isEmpty(format)) {
-    if (isCurl(userAgent)) {
-      format = 'terminal'
-    } else {
-      format = 'png'
-    }
-  }
+  width = toNumber(width)
+  margin = toNumber(margin)
+  scale = toNumber(scale)
+
+  margin = margin || 2
 
   darkColor = formatRGBAColor(darkColor)
   lightColor = formatRGBAColor(lightColor)
 
-  if (lodash.isEqual(format, 'png')) {
-    reply.type('image/png')
+  let resp: GetQrCodeResp = { type: '', data: '' }
 
-    reply.send(
-      await QRCode.toBuffer(text, {
-        type: 'png',
-        width,
-        margin,
-        scale,
-        color: {
-          light: lightColor,
-          dark: darkColor,
-        },
-      }),
-    )
-  } else if (lodash.isEqual(format, 'base64')) {
-    reply.send(
-      await QRCode.toDataURL(text, {
-        type: 'image/jpeg',
-        width,
-        margin,
-        scale,
-        color: {
-          light: lightColor,
-          dark: darkColor,
-        },
-      }),
-    )
+  if (lodash.isEqual(format, 'base64')) {
+    resp.type = 'text/plain'
+    resp.data = await QRCode.toDataURL(text, {
+      type: 'image/jpeg',
+      width,
+      margin,
+      scale,
+      color: {
+        light: lightColor,
+        dark: darkColor,
+      },
+    })
   } else if (lodash.isEqual(format, 'svg')) {
-    reply.type('image/svg+xml')
-
-    reply.send(
-      await QRCode.toString(text, {
-        type: 'svg',
-        width,
-        margin,
-        scale,
-        color: {
-          light: lightColor,
-          dark: darkColor,
-        },
-      }),
-    )
+    resp.type = 'image/svg+xml'
+    resp.data = await QRCode.toString(text, {
+      type: 'svg',
+      width,
+      margin,
+      scale,
+      color: {
+        light: lightColor,
+        dark: darkColor,
+      },
+    })
   } else if (lodash.isEqual(format, 'terminal')) {
-    reply.type('application/octet-stream')
-    reply.send(
-      await QRCode.toString(text, {
-        type: 'terminal',
-        width,
-        margin,
-        scale,
-        small: true,
-        color: {
-          light: lightColor,
-          dark: darkColor,
-        },
-      }),
-    )
+    resp.type = 'application/octet-stream'
+    resp.data = await QRCode.toString(text, {
+      type: 'terminal',
+      width,
+      margin,
+      scale,
+      small: true,
+      color: {
+        light: lightColor,
+        dark: darkColor,
+      },
+    })
   } else if (lodash.isEqual(format, 'utf8')) {
-    reply.send(
-      await QRCode.toString(text, {
-        type: 'utf8',
-        width,
-        margin,
-        scale,
-        color: {
-          light: lightColor,
-          dark: darkColor,
-        },
-      }),
-    )
+    resp.type = 'text/plain'
+    resp.data = await QRCode.toString(text, {
+      type: 'utf8',
+      width,
+      margin,
+      scale,
+      color: {
+        light: lightColor,
+        dark: darkColor,
+      },
+    })
   } else {
-    reply.status(400)
-    reply.send({
-      code: 'BadRequest',
-      message: `format '${format}' is not supported`,
+    resp.type = 'image/png'
+    resp.data = await QRCode.toBuffer(text, {
+      type: 'png',
+      width,
+      margin,
+      scale,
+      color: {
+        light: lightColor,
+        dark: darkColor,
+      },
     })
   }
-}
 
-export const GetQrCodeReqSchema = {
-  type: 'object',
-  properties: {
-    text: { type: 'string' },
-    margin: { type: 'number' },
-    width: { type: 'number' },
-    scale: { type: 'number' },
-    format: { type: 'string' },
-    darkColor: { type: 'string' },
-    lightColor: { type: 'string' },
-  },
-  required: ['text'],
+  return resp
 }
