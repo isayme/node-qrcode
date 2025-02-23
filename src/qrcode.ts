@@ -43,10 +43,10 @@ export async function getQrCode(params: GetQrCodeReq): Promise<GetQrCodeResp> {
         dark: darkColor,
       },
     })
-  } else if (lodash.isEqual(format, 'svg')) {
-    resp.type = 'image/svg+xml'
-    resp.data = await QRCode.toString(text, {
-      type: 'svg',
+  } else if (lodash.isEqual(format, 'png')) {
+    resp.type = 'image/png'
+    resp.data = await QRCode.toBuffer(text, {
+      type: 'png',
       width,
       margin,
       scale,
@@ -81,9 +81,9 @@ export async function getQrCode(params: GetQrCodeReq): Promise<GetQrCodeResp> {
       },
     })
   } else {
-    resp.type = 'image/png'
-    resp.data = await QRCode.toBuffer(text, {
-      type: 'png',
+    resp.type = 'image/svg+xml'
+    resp.data = await QRCode.toString(text, {
+      type: 'svg',
       width,
       margin,
       scale,
