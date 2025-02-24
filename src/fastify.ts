@@ -29,7 +29,7 @@ export function createApp() {
   app.register(cors)
 
   app.post<{ Body: GetQrCodeReq }>(
-    '/qr',
+    '/get',
     { schema: { body: GetQrCodeReqSchema } },
     async (request, reply) => {
       await getQrCodeHandler(request, reply, request.body)
@@ -37,7 +37,7 @@ export function createApp() {
   )
 
   app.get<{ Querystring: GetQrCodeReq }>(
-    '/qr',
+    '/get',
     { schema: { querystring: GetQrCodeReqSchema } },
     async (request, reply) => {
       await getQrCodeHandler(request, reply, request.query)

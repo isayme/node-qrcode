@@ -15,10 +15,10 @@ async function getQrCodeHandler(params: GetQrCodeReq): Promise<Response> {
 }
 
 router
-  .get('/qr', async (req) => {
+  .get('/get', async (req) => {
     return getQrCodeHandler(req.query)
   })
-  .post('/qr', async (req) => {
+  .post('/get', async (req) => {
     return getQrCodeHandler(req.content)
   })
   .all('*', () => {
