@@ -7,7 +7,7 @@
     "build": "tsx",
     "dev": "tsx src/platform/node.ts",
     "deploy:cf": "wrangler deploy",
-    "deploy:vercel": "vercel deploy"
+    "deploy:vercel": "vercel deploy --prod"
   },
   "keywords": [],
   "author": "isayme <isaymeorg@gmail.com>",
