@@ -23,6 +23,7 @@ updates:
       minor-deps:
         update-types:
           - "minor"
+          
 - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
